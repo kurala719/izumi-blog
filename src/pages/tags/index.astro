@@ -1,0 +1,66 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+type PostEntry = CollectionEntry<'posts'>;
+
+const posts = (await getCollection('posts')) as PostEntry[];
+const visiblePosts = posts.filter((post) => !post.data.draft);
+const tagCounts = visiblePosts.reduce((acc: Map<string, number>, post: PostEntry) => {
+	post.data.tags.forEach((tag: string) => {
+		acc.set(tag, (acc.get(tag) ?? 0) + 1);
+	});
+	return acc;
+}, new Map<string, number>());
+const tags = (Array.from(tagCounts.entries()) as [string, number][]) 
+	.sort((a, b) => b[1] - a[1]);
+---
+
+<Layout title="标签 · Izumi blog" description="Izumi blog 的所有标签。">
+	<section class="container section">
+		<h1>标签</h1>
+		<p class="subtitle">所有标签会随文章内容自动生成。</p>
+		<div class="grid">
+			{tags.map(([tag, count]: [string, number]) => (
+				<a class="tag" href={`/tags/${encodeURIComponent(tag)}`}>
+					<span>#{tag}</span>
+					<span>{count}</span>
+				</a>
+			))}
+		</div>
+	</section>
++</Layout>
+
+<style>
+	.section {
+		padding: 64px 0;
+	}
+
+	h1 {
+		margin: 0 0 12px;
+		font-size: 2.2rem;
+	}
+
+	.subtitle {
+		margin: 0 0 24px;
+		color: var(--ink-soft);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+		gap: 12px;
+	}
+
+	.tag {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 12px 14px;
+		border-radius: var(--radius-md);
+		background: var(--bg-card);
+		border: 1px solid var(--line);
+		color: var(--ink);
+	}
+</style>

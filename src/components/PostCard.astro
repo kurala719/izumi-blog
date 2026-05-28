@@ -1,0 +1,71 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+type Props = {
+	post: CollectionEntry<'posts'>;
+};
+
+const { post } = Astro.props;
+const slug = post.id.replace(/\.md$/, '');
+---
+
+<article class="card">
+	<div class="meta">
+		<span>{post.data.category ?? '未分类'}</span>
+		<span>{post.data.date.toISOString().slice(0, 10)}</span>
+	</div>
+	<h4>{post.data.title}</h4>
+	<p>{post.data.excerpt}</p>
+	<div class="footer">
+		<span>{post.data.readingTime ?? '5 min'}</span>
+		<a href={`/posts/${slug}`}>阅读 →</a>
+	</div>
+</article>
+
+<style>
+	.card {
+		background: var(--bg-card);
+		border-radius: var(--radius-md);
+		padding: 18px 18px 16px;
+		border: 1px solid var(--line);
+		display: grid;
+		gap: 10px;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	.card:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow);
+	}
+
+	.meta {
+		display: flex;
+		justify-content: space-between;
+		font-size: 0.8rem;
+		color: var(--ink-soft);
+	}
+
+	h4 {
+		margin: 0;
+		font-size: 1.05rem;
+	}
+
+	p {
+		margin: 0;
+		color: var(--ink-soft);
+		font-size: 0.95rem;
+	}
+
+	.footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 0.85rem;
+		color: var(--ink-soft);
+	}
+
+	.footer a {
+		color: var(--accent);
+		font-weight: 600;
+	}
+</style>

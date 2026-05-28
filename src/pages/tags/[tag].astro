@@ -1,0 +1,70 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+type PostEntry = CollectionEntry<'posts'>;
+
+export async function getStaticPaths() {
+	const posts = (await getCollection('posts')) as PostEntry[];
+	const visiblePosts = posts.filter((post) => !post.data.draft);
+	const tags = new Set<string>(visiblePosts.flatMap((post) => post.data.tags));
+
+	return Array.from(tags).map((tag) => ({
+		params: { tag: encodeURIComponent(tag) },
+		props: { tag },
+	}));
+}
+
+const { tag } = Astro.props as { tag: string };
+const posts = ((await getCollection('posts')) as PostEntry[])
+	.filter((post) => !post.data.draft)
+	.filter((post) => post.data.tags.includes(tag));
+---
+
+<Layout title={`#${tag} · Izumi blog`} description={`标签 ${tag} 下的文章列表。`}>
+	<section class="container section">
+		<div class="section-head">
+			<h1>#{tag}</h1>
+			<span>{posts.length} 篇</span>
+		</div>
+		<div class="grid">
+			{posts.map((post: PostEntry) => (
+				<PostCard post={post} />
+			))}
+		</div>
+	</section>
++</Layout>
+
+<style>
+	.section {
+		padding: 64px 0;
+	}
+
+	.section-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
++		color: var(--ink-soft);
+		margin-bottom: 18px;
+	}
+
+	h1 {
+		margin: 0;
+		font-size: 2.2rem;
++		color: var(--ink);
+	}
+
+	.grid {
+		display: grid;
+		gap: 14px;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	@media (max-width: 860px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="关于 · Izumi blog" description="关于 Izumi blog 与作者。">
+	<section class="container section">
+		<h1>关于</h1>
+		<p class="lead">
+			这里记录技术话题、热点评论与日常观察。输出偏重结构化思考与可复用结论。
+		</p>
+		<div class="panel">
+			<div>
+				<h2>关注方向</h2>
+				<p>AI 工程化、产品策略、组织协作、体验设计。</p>
+			</div>
+			<div>
+				<h2>写作方式</h2>
+				<p>用可验证的事实与数据支撑观点，避免情绪化叙述。</p>
+			</div>
+			<div>
+				<h2>联系</h2>
+				<p>hello@izumi.dev</p>
+			</div>
+		</div>
+	</section>
++</Layout>
+
+<style>
+	.section {
+		padding: 64px 0;
+	}
+
+	h1 {
+		margin: 0 0 16px;
+		font-size: 2.2rem;
+	}
+
+	.lead {
+		margin: 0 0 28px;
+		color: var(--ink-soft);
+		max-width: 640px;
+	}
+
+	.panel {
+		display: grid;
+		gap: 16px;
+		background: var(--bg-card);
+		border-radius: var(--radius-md);
+		border: 1px solid var(--line);
+		padding: 20px;
+	}
+
+	h2 {
+		margin: 0 0 6px;
+		font-size: 1.1rem;
+	}
+
+	.panel p {
+		margin: 0;
+		color: var(--ink-soft);
+	}
+</style>
